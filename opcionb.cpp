@@ -13,7 +13,7 @@ class Billetera {
 
 private:
     // datos del usuario
-    
+
     string propietario; // nombre del dueño
     double saldo; // dinero disponible
 
@@ -25,9 +25,7 @@ private:
 
 public:
 
-    // --------------------------------------------------
-    // CONSTRUCTOR (se ejecuta al crear el objeto)
-    // --------------------------------------------------
+    // constructor  (se ejecuta al crear el objeto)
     Billetera(string nombre, double saldoInicial) {
         propietario = nombre; // guardo nombre
         saldo = saldoInicial; // guardo saldo inicial
@@ -36,14 +34,13 @@ public:
         cantidadGastos = 0;
     }
 
-    // --------------------------------------------------
-    // METODO PARA AGREGAR INGRESO
-    // --------------------------------------------------
+    // metodo para agregar ingreso
+
     void agregarIngreso(double monto) {
 
         // valido que no sea negativo o cero
         if (monto <= 0) {
-            cout << "Error: monto invalido" << endl;
+            cout << " error, monto invalido" << endl;
             return; // salgo del metodo
         }
 
@@ -51,27 +48,25 @@ public:
         saldo += monto;
     }
 
-    // --------------------------------------------------
-    // METODO PARA REGISTRAR GASTO
+    // metodo para registrar el gasto
     // usa referencia (&)
-    // --------------------------------------------------
     void registrarGasto(double monto, int &contadorSesion) {
 
         // valido monto negativo
         if (monto <= 0) {
-            cout << "Error: monto invalido" << endl;
+            cout << "error, monto invalido" << endl;
             return;
         }
 
         // valido que haya suficiente saldo
         if (monto > saldo) {
-            cout << "Error: saldo insuficiente" << endl;
+            cout << "error, saldo insuficiente" << endl;
             return;
         }
 
         // valido que no se pase del limite del array
         if (cantidadGastos >= 20) {
-            cout << "Error: limite de gastos alcanzado" << endl;
+            cout << "error, limite de gastos alcanzado" << endl;
             return;
         }
 
@@ -91,9 +86,8 @@ public:
         cout << "Gasto registrado. Saldo: $" << saldo << endl;
     }
 
-    // --------------------------------------------------
-    // METODO QUE RETORNA UN VALOR (promedio)
-    // --------------------------------------------------
+    // metodo que retorna un valor -promedio-
+ 
     double calcularPromedio() {
 
         // si no hay gastos retorno 0
@@ -110,18 +104,14 @@ public:
         return suma / cantidadGastos;
     }
 
-    // --------------------------------------------------
-    // METODO QUE RETORNA UN PUNTERO
-    // --------------------------------------------------
+//retorna a un puntero
     double* obtenerSaldo() {
 
         // retorno la direccion de memoria del saldo
         return &saldo;
     }
 
-    // --------------------------------------------------
-    // MOSTRAR HISTORIAL
-    // --------------------------------------------------
+//mostar historial
     void verHistorial() {
 
         cout << "=== HISTORIAL ===" << endl;
@@ -132,9 +122,7 @@ public:
         }
     }
 
-    // --------------------------------------------------
-    // MOSTRAR ESTADO DEL USUARIO
-    // --------------------------------------------------
+  //mostrar estado del usuario
     void verEstado() {
 
         cout << "Propietario: " << propietario << endl;
@@ -142,10 +130,7 @@ public:
         cout << "Gastos: " << cantidadGastos << endl;
     }
 };
-
-// ------------------------------------------------------
-// FUNCION PRINCIPAL
-// ------------------------------------------------------
+//funcion principal
 int main() {
 
     string nombre;
