@@ -1,156 +1,175 @@
 #include <iostream>
 using namespace std;
 
-// Funcion externa que usa puntero * para modificar saldo
-
-void aplicarCargo(double *saldo) { //inicio 
-    *saldo -=5: // resta 5 dolares
+// Funcion externa 
+// usa puntero * para modificar el saldo
+void aplicarCargo(double *saldo) {
+    // aqui accedo al valor usando el puntero
+    *saldo -= 5; // resto 5 dolares al saldo
 }
 
-//Clase principal- tipo de objeto 
-
+// aqui entramos a la clase principal
 class Billetera {
 
-    //datos de ella 
+private:
+    // datos del usuario
+    
+    string propietario; // nombre del dueño
+    double saldo; // dinero disponible
 
-// estructura de una clase 
+    // array para guardar historial de gastos (maximo 20)
+    double gastos[20];
 
-    private:
-    string propietario;
-    double saldo;
-    double gastos[20];       // array para historial
-
+    // contador de cuantos gastos se han registrado
     int cantidadGastos;
 
+public:
 
-    public:
-    
-    // Constructor con parámetros
-
-    //llamo al tipo de objeto 
-
+    // --------------------------------------------------
+    // CONSTRUCTOR (se ejecuta al crear el objeto)
+    // --------------------------------------------------
     Billetera(string nombre, double saldoInicial) {
-        propietario = nombre; //
-        saldo = saldoInicial;  //
-        cantidadGastos = 0;  //
+        propietario = nombre; // guardo nombre
+        saldo = saldoInicial; // guardo saldo inicial
+
+        // inicializo contador en 0 porque no hay gastos aun
+        cantidadGastos = 0;
     }
 
-// Clase principal
-
-    // Metodo para agregar ingreso
-
+    // --------------------------------------------------
+    // METODO PARA AGREGAR INGRESO
+    // --------------------------------------------------
     void agregarIngreso(double monto) {
+
+        // valido que no sea negativo o cero
         if (monto <= 0) {
-            cout << "error, monto invalido" << endl;
-            return;
+            cout << "Error: monto invalido" << endl;
+            return; // salgo del metodo
         }
+
+        // sumo el dinero al saldo
         saldo += monto;
     }
 
-
-
- // Método con referencia & para poder modificar la variable del main, no se trabaja con la copia sino se modifica la original 
-
+    // --------------------------------------------------
+    // METODO PARA REGISTRAR GASTO
+    // usa referencia (&)
+    // --------------------------------------------------
     void registrarGasto(double monto, int &contadorSesion) {
 
-        //son mis condiciones para poder entar al registro de gasto 
-
-        if (monto <= 0) { // si es menor a 0
-            cout << "error, monto invalido" << endl;
+        // valido monto negativo
+        if (monto <= 0) {
+            cout << "Error: monto invalido" << endl;
             return;
         }
 
-
-        if (monto > saldo) { //si es monto es mayor al saldo 
-            cout << "error, saldo insuficiente" << endl;
+        // valido que haya suficiente saldo
+        if (monto > saldo) {
+            cout << "Error: saldo insuficiente" << endl;
             return;
         }
 
-        if (cantidadGastos >= 20) { //si la cantidad de gastos es mayor o igual a 20 ya que es es el maximo de gastos que pueden consumir 
-            cout << "error, limite de gastos alcanzado" << endl;
+        // valido que no se pase del limite del array
+        if (cantidadGastos >= 20) {
+            cout << "Error: limite de gastos alcanzado" << endl;
             return;
         }
 
-        //si cumple las condiciones 
-
+        // descuento el gasto del saldo
         saldo -= monto;
+
+        // guardo el gasto en el array
         gastos[cantidadGastos] = monto;
 
+        // aumento contador interno
         cantidadGastos++;
-           // aumento el contador de gastos en la sesion.
-        contadorSesion++; // con esto modificamos variable externa
-     
-//imprimo el gasto registrado 
-        cout << "Gasto registrado. Saldo: " << saldo << endl;
 
+        // aumento contador externo (REFERENCIA)
+        // esto modifica la variable del main directamente
+        contadorSesion++;
+
+        cout << "Gasto registrado. Saldo: $" << saldo << endl;
     }
 
-  // Método que retorna valor - calcular el promedio
-
+    // --------------------------------------------------
+    // METODO QUE RETORNA UN VALOR (promedio)
+    // --------------------------------------------------
     double calcularPromedio() {
 
+        // si no hay gastos retorno 0
         if (cantidadGastos == 0) return 0;
 
         double suma = 0;
+
+        // recorro el array y sumo todos los gastos
         for (int i = 0; i < cantidadGastos; i++) {
             suma += gastos[i];
         }
+
+        // retorno el promedio
         return suma / cantidadGastos;
     }
- // metodo para retornar puntero 
-    double* obtenerSaldo() {
-    
-        return &saldo;
 
+    // --------------------------------------------------
+    // METODO QUE RETORNA UN PUNTERO
+    // --------------------------------------------------
+    double* obtenerSaldo() {
+
+        // retorno la direccion de memoria del saldo
+        return &saldo;
     }
 
-// necesito mostar el historial 
+    // --------------------------------------------------
+    // MOSTRAR HISTORIAL
+    // --------------------------------------------------
+    void verHistorial() {
 
-void verhistorial () {
-    cout <<"=== HISTORIAL ==="<< endl;
-    for (int i = 0; i < cantidadGastos; i++) {
-            cout << "Gasto " << i + 1 << ": $" << gastos[i] << endl; //aqui imprimira los gastos como en el taller gasto 1 y gasto 2 
+        cout << "=== HISTORIAL ===" << endl;
+
+        // recorro el array
+        for (int i = 0; i < cantidadGastos; i++) {
+            cout << "Gasto " << i + 1 << ": $" << gastos[i] << endl;
         }
-}
+    }
 
-
-// Mostrar estado
+    // --------------------------------------------------
+    // MOSTRAR ESTADO DEL USUARIO
+    // --------------------------------------------------
     void verEstado() {
+
         cout << "Propietario: " << propietario << endl;
         cout << "Saldo: $" << saldo << endl;
         cout << "Gastos: " << cantidadGastos << endl;
     }
 };
 
-
-//empezar todo 
-
+// ------------------------------------------------------
+// FUNCION PRINCIPAL
+// ------------------------------------------------------
 int main() {
 
     string nombre;
     double saldoInicial;
 
-    //imprime el nombre del propietario 
-
+    // pido datos al usuario
     cout << "Propietario: ";
     cin >> nombre;
-//he imprime el saldo que tiene incial 
 
     cout << "Saldo inicial: ";
     cin >> saldoInicial;
 
-//guardas mis datos ingresados en mi billetera digital 
-
+    // creo objeto de la clase
     Billetera b(nombre, saldoInicial);
 
     int opcion;
-    int gastosSesion = 0; // variable para referencia 
 
+    // variable para contar gastos en esta sesion
+    int gastosSesion = 0;
 
+    // menu con while (requisito del examen)
+    do {
 
-
-//usames el ejemplo de ejecucion usando el ejemplo de la guia,mostrando cada 
-    do { cout << "=== MENU ===" << endl;
+        cout << "\n=== MENU ===" << endl;
         cout << "1. Agregar ingreso" << endl;
         cout << "2. Registrar gasto" << endl;
         cout << "3. Ver historial" << endl;
@@ -158,54 +177,53 @@ int main() {
         cout << "5. Ver promedio" << endl;
         cout << "6. Aplicar cargo" << endl;
         cout << "7. Salir" << endl;
+
         cout << "Opcion: ";
         cin >> opcion;
-        //aqui entra la opcion
-      
 
-              if (opcion == 1) {
+        if (opcion == 1) {
             double monto;
             cout << "Monto: ";
             cin >> monto;
+
             b.agregarIngreso(monto);
         }
+
         else if (opcion == 2) {
             double monto;
             cout << "Monto: ";
             cin >> monto;
+
+            // envio variable por referencia
             b.registrarGasto(monto, gastosSesion);
         }
+
         else if (opcion == 3) {
             b.verHistorial();
         }
+
         else if (opcion == 4) {
             b.verEstado();
         }
+
         else if (opcion == 5) {
             cout << "Promedio: $" << b.calcularPromedio() << endl;
         }
+
         else if (opcion == 6) {
-            aplicarCargo(b.obtenerSaldo()); // usamos puntero
-            cout << "Cargo aplicado. Nuevo saldo: $" << *b.obtenerSaldo() << endl;
+
+            // uso funcion externa con puntero
+            aplicarCargo(b.obtenerSaldo());
+
+            cout << "Cargo aplicado. Nuevo saldo: $" 
+                 << *b.obtenerSaldo() << endl;
         }
 
     } while (opcion != 7);
 
-    cout << "Sesion terminada. Gastos registrados: " << gastosSesion << endl;
+    // mensaje final usando referencia
+    cout << "Sesion terminada. Gastos registrados: " 
+         << gastosSesion << endl;
 
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
